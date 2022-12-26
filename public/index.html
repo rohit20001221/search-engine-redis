@@ -1,0 +1,44 @@
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+        padding: 10px;
+    }
+</style>
+
+
+<input type="text" placeholder="query medicine" style="padding:10px" oninput="searchMedicine(event)">
+<br /><br />
+<table>
+    <thead>
+        <tr>
+            <th>Molecule</th>
+            <th>SKU</th>
+            <th>speciality</th>
+        </tr>
+    </thead>
+    <tbody id="results"></tbody>
+</table>
+
+<script>
+    async function searchMedicine(event) {
+        const { value } = event.currentTarget
+
+        await fetch(`/search?q=${value}`).then(res => res.json()).then(data => {
+            const results = document.getElementById("results")
+
+            results.innerHTML = ''
+            for (const { value: { molecule, sku, speciality } } of data) {
+                results.innerHTML += `
+                    <tr>
+                        <td>${molecule}</td>
+                        <td>${sku}</td>
+                        <td>${speciality}</td>
+                    </tr>
+                `
+            }
+        })
+    }
+</script>
